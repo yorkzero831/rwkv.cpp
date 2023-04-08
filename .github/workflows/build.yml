@@ -59,11 +59,16 @@ jobs:
           cmake -DBUILD_SHARED_LIBS=ON ..
           cmake --build . --config Release
 
+      - name: Get commit hash
+        id: commit
+        if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || github.event.inputs.create_release == 'true' }}
+        uses: pr-mpt/actions-commit-hash@v2
+
       - name: Pack artifacts
         id: pack_artifacts
         if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || github.event.inputs.create_release == 'true' }}
         run: |
-          zip rwkv-${{ env.BRANCH_NAME }}-${{ steps.commit.outputs.short }}-bin-linux.zip ./librwkv.so
+          zip rwkv-${{ env.BRANCH_NAME }}-${{ steps.commit.outputs.short }}-bin-linux.zip ./build/librwkv.so
 
       - name: Upload artifacts
         if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || github.event.inputs.create_release == 'true' }}
@@ -112,11 +117,16 @@ jobs:
           cmake -DBUILD_SHARED_LIBS=ON -DRWKV_AVX2=OFF ..
           cmake --build . --config Release
 
+      - name: Get commit hash
+        id: commit
+        if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || github.event.inputs.create_release == 'true' }}
+        uses: pr-mpt/actions-commit-hash@v2
+
       - name: Pack artifacts
         id: pack_artifacts
         if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || github.event.inputs.create_release == 'true' }}
         run: |
-          zip rwkv-${{ env.BRANCH_NAME }}-${{ steps.commit.outputs.short }}-bin-macos.zip ./librwkv.dylib
+          zip rwkv-${{ env.BRANCH_NAME }}-${{ steps.commit.outputs.short }}-bin-macos.zip ./build/librwkv.dylib
 
       - name: Upload artifacts
         if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/master' ) || github.event.inputs.create_release == 'true' }}
